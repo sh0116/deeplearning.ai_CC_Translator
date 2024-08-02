@@ -1,17 +1,26 @@
 {
     "manifest_version": 3,
-    "name": "Subtitle Display Test",
+    "name": "deeplearning.ai_CC_Translator",
     "version": "1.0",
-    "permissions": ["activeTab", "scripting"],
+    "permissions": [
+      "activeTab",
+      "storage",
+      "https://api.deepl.com/"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
     "content_scripts": [
       {
-        "matches": ["https://www.deeplearning.ai/*"],
+        "matches": ["<all_urls>"],
         "js": ["content.js"]
       }
     ],
     "action": {
       "default_popup": "popup.html",
       "default_icon": "icon.png"
+    },
+    "icons": {
+      "48": "icon.png"
     }
   }
-  
