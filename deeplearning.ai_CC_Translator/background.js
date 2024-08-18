@@ -1,6 +1,6 @@
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if (request.contentScriptQuery == "translateText") {
+    if (request.contentScriptQuery === "translateText") {
       fetch(`https://api.deepl.com/v2/translate`, {
         method: 'POST',
         headers: {
@@ -13,9 +13,18 @@ chrome.runtime.onMessage.addListener(
         })
       })
       .then(response => response.json())
-      .then(data => sendResponse({translatedText: data.translations[0].text}))
-      .catch(error => console.error('Error:', error));
-      return true;  // Will respond asynchronously.
+      .then(data => {
+        if (data.translations && data.translations.length > 0) {
+          sendResponse({translatedText: data.translations[0].text});
+        } else {
+          throw new Error('Translation data is missing or empty.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        sendResponse({translatedText: '', error: error.toString()});
+      });
+      return true;
     }
   }
 );
